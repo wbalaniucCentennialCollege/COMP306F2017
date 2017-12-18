@@ -15,9 +15,21 @@ rtm.start();
 
 const RtmClient = require('@slack/client').RtmClient;
 const CLIENT_EVENTS = require('@slack/client').CLIENT_EVENTS;
+const RTM_EVENTS = require('@slack/client').RTM_EVENTS;
+let rtm = null;
 
+// Function to handle when bot is connected and authenticated
 function handleOnAuthenticated(rtmStartData) {
     console.log(`Logged in as ${rtmStartData.self.name} of team ${rtmStartData.team.name}, but not yet connected to a channel`)
+}
+
+// Function to handle message recieved by bot
+function handleOnMessage(message) {
+    console.log(message);
+
+    rtm.sendMessage('this is a test message', message.channel, function () {
+        // Optional callback function that executes when a message is sent by the bot.
+    });
 }
 
 function addAuthenticatedHandler(rtm, handler) { // 2nd parameter will be a function that handles the event
@@ -25,8 +37,9 @@ function addAuthenticatedHandler(rtm, handler) { // 2nd parameter will be a func
 }
 
 module.exports.init = function slackClient(token, logLevel) {
-    const rtm = new RtmClient(token, {logLevel: logLevel});
+    rtm = new RtmClient(token, { logLevel: logLevel });
     addAuthenticatedHandler(rtm, handleOnAuthenticated);
+    rtm.on(RTM_EVENTS.MESSAGE, handleOnMessage);
     return rtm;
 }
 
