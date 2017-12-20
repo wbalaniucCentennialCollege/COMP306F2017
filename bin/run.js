@@ -4,13 +4,13 @@ const slackClient = require('../server/slackClient');
 const service = require("../server/service"); // Ties into service.js (just created)
 const http = require('http'); // Part of base NODE.JS
 
-const slackToken = '';
+const slackToken = 'xoxb-285839840913-PVmXTOVuH0h6NlgNwXNwbbRt';
 const slackLogLevel = 'verbose';
 
-const witToken = '';
+const witToken = 'GQLHWTXDCCHLDPYCOPECHRPC4UKDSKLV';
 const witClient = require('../server/witClient')(witToken);
 
-const rtm = slackClient.init(slackToken, slackLogLevel);
+const rtm = slackClient.init(slackToken, slackLogLevel, witClient);
 rtm.start();
 
 const server = http.createServer(service); // Server objects that uses express
